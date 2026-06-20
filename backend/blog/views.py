@@ -75,3 +75,4 @@ def readiness(request):
         "status": "ready"
     })
 #comment# test deploy
+# test ci cd
