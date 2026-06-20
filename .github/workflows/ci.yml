@@ -48,3 +48,5 @@ jobs:
       - name: Push Docker Image
         run: |
           docker push akashkrgupta01/django-blog-app:latest
+
+#test
