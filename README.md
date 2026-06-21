@@ -2,153 +2,136 @@
 
 ## Project Overview
 
-This project is a Django Blog application deployed using Docker, Nginx, PostgreSQL, AWS EC2, Netlify, Kubernetes manifests, and CI/CD pipelines.
+This is a simple Blog application built with Django REST Framework on the backend and a plain HTML/JS frontend. The whole thing is containerized with Docker and deployed on AWS EC2, with the frontend hosted separately on Netlify. Nginx sits in front of the Django app as a reverse proxy and also handles SSL.
+
+I also added Kubernetes manifests and a basic CI/CD workflow as part of the assignment, though the main deployment runs through Docker Compose on EC2.
 
 ---
 
 ## Project Structure
 
 ```text
-backend/                Django Backend
-frontend/               Frontend Application
-docker/                 Nginx Configuration
-k8s/                    Kubernetes Manifests
-.github/workflows/      CI/CD Pipelines
-docker-compose.yml      Docker Compose Configuration
-README.md               Documentation
+backend/                Django backend (REST API)
+frontend/                Frontend (HTML, CSS, JS)
+docker/                  Nginx config files
+k8s/                      Kubernetes manifests
+.github/workflows/    CI/CD pipeline
+docker-compose.yml   Docker Compose setup
+README.md             This file
 ```
 
 ---
 
 ## Tech Stack
 
-* Django
+* Django + Django REST Framework
 * PostgreSQL
-* Docker
-* Docker Compose
-* Nginx
+* Docker / Docker Compose
+* Nginx (reverse proxy + SSL)
 * AWS EC2
-* Netlify
-* Kubernetes
+* Netlify (frontend hosting)
+* Kubernetes (manifests)
 * GitHub Actions
 
 ---
 
-## Local Setup
+## Running Locally
 
-### Clone Repository
+Clone the repo:
 
 ```bash
 git clone https://github.com/akash-gupta00/django-blog.git
 cd django-blog
 ```
 
-### Run Using Docker
+Build and start everything with Docker:
 
 ```bash
 docker compose up -d --build
 ```
 
-### Verify Containers
+Check that all containers are up:
 
 ```bash
 docker ps
 ```
 
+You should see three containers running - the Django app, Postgres, and Nginx.
+
 ---
 
-## Deployment Steps
+## Backend Deployment (AWS EC2)
 
-### Backend Deployment (AWS EC2)
-
-1. Launch EC2 Instance
-2. Install Docker and Docker Compose
-3. Clone Repository
+1. Launched a t3.micro EC2 instance on AWS (Ubuntu).
+2. Installed Docker and Docker Compose on the instance.
+3. Cloned the repo onto the server:
 
 ```bash
 git clone https://github.com/akash-gupta00/django-blog.git
 cd django-blog
 ```
 
-4. Run Application
+4. Started the containers:
 
 ```bash
 sudo docker compose up -d --build
 ```
 
-5. Verify Running Containers
+5. Verified everything was running:
 
 ```bash
 sudo docker ps
 ```
 
----
-
-## Frontend Deployment
-
-Frontend deployed on Netlify.
-
-Frontend URL:
-
-PASTE_YOUR_NETLIFY_URL_HERE
+An Elastic IP was attached to the instance so the IP stays fixed even if the server restarts. For SSL, I used a free `sslip.io` domain (since I didn't want to buy a domain just for this assignment) and generated a certificate with Certbot. Nginx handles HTTPS termination and forwards requests to the Django app over port 8000 internally.
 
 ---
 
-## Backend Deployment URL
+## Live URLs
 
-Backend URL:
+**Frontend (Netlify):**
+https://grand-cucurucho-55740e.netlify.app
 
-http://3.91.201.134
+**Backend (EC2 + Nginx + SSL):**
+https://3-215-236-156.sslip.io
 
-Health Check Endpoint:
+**Health check:**
+https://3-215-236-156.sslip.io/health/
 
-http://3.91.201.134/health/
+**Posts endpoint:**
+https://3-215-236-156.sslip.io/posts/
 
-Posts Endpoint:
-
-http://3.91.201.134/posts/
+**Admin panel:**
+https://3-215-236-156.sslip.io/admin/
 
 ---
 
 ## Docker Services
 
-* Django Application
-* PostgreSQL Database
-* Nginx Reverse Proxy
+* `django_app` - Django application server (Gunicorn)
+* `postgres_db` - PostgreSQL database
+* `nginx_proxy` - Nginx reverse proxy with SSL
 
 ---
 
 ## Kubernetes
 
-Kubernetes manifests are available inside:
-
-```text
-k8s/
-```
+Kubernetes manifests (Deployment, Service, Ingress) are included in the `k8s/` folder for reference, in case the app needs to move to a cluster setup later.
 
 ---
 
 ## CI/CD
 
-GitHub Actions workflow available inside:
-
-```text
-.github/workflows/
-```
+A basic GitHub Actions workflow is set up under `.github/workflows/` to automate build/test on push.
 
 ---
 
-## Monitoring
+## Notes / Things I'd improve later
 
-Grafana Dashboard URL:
-
-PASTE_GRAFANA_URL_HERE
-
-Monitoring Stack:
-
-* Grafana
-* Prometheus
-* Loki
+* Move secrets (DB password, Django secret key) into environment variables instead of hardcoding them in settings.py
+* Set `DEBUG = False` for production
+* Get a proper domain instead of relying on sslip.io
+* Add monitoring (Grafana/Prometheus) - not set up yet for this version
 
 ---
 
@@ -156,9 +139,4 @@ Monitoring Stack:
 
 Akash Gupta
 
-GitHub Repository:
-
-https://github.com/akash-gupta00/django-blog
-
-```
-```
+GitHub Repository: https://github.com/akash-gupta00/django-blog
