@@ -1,11 +1,12 @@
+const API_URL = "http://3.91.201.134";
+
 let token = "";
 
 async function login() {
-
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    const response = await fetch("http://127.0.0.1:8000/api/token/", {
+    const response = await fetch(`${API_URL}/api/token/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
@@ -18,21 +19,23 @@ async function login() {
 
     const data = await response.json();
 
-    token = data.access;
-
-    alert("Login Successful");
+    if (response.ok) {
+        token = data.access;
+        alert("Login Successful");
+    } else {
+        alert("Login Failed");
+        console.log(data);
+    }
 }
 
 async function loadPosts() {
-
-    const response = await fetch("http://127.0.0.1:8000/posts/");
+    const response = await fetch(`${API_URL}/posts/`);
 
     const posts = await response.json();
 
     let html = "";
 
     posts.forEach(post => {
-
         html += `
             <div class="post">
                 <h3>${post.title}</h3>
@@ -45,11 +48,10 @@ async function loadPosts() {
 }
 
 async function addPost() {
-
     const title = document.getElementById("title").value;
     const content = document.getElementById("content").value;
 
-    const response = await fetch("http://127.0.0.1:8000/posts/", {
+    const response = await fetch(`${API_URL}/posts/`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -61,8 +63,16 @@ async function addPost() {
         })
     });
 
-    if(response.ok){
-        alert("Post Added");
+    if (response.ok) {
+        alert("Post Added Successfully");
         loadPosts();
+    } else {
+        alert("Failed to Add Post");
     }
 }
+
+window.onload = function () {
+    if (document.getElementById("posts")) {
+        loadPosts();
+    }
+};
