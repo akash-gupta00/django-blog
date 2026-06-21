@@ -1,4 +1,4 @@
-const API_URL = "https://3-215-236-156.sslip.io/api/";
+const API_URL = "https://3-215-236-156.sslip.io";
 
 let token = "";
 
