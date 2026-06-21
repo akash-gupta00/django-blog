@@ -25,7 +25,8 @@ SECRET_KEY = "django-insecure-j&-44bm7(bjse7$!ju+-)n@p!h04s9mn0fv3474@$w$f^3=v@(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.91.201.134', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['3-215-236-156.sslip.io', '3.215.236.156', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
